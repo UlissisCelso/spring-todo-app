@@ -15,13 +15,14 @@ A fullstack to-do list application built with Spring Boot and HTML/CSS/JS. The g
 ## 🛠️ Tech Stack
 
 * **Backend:**
-    * Java 17+
+    * Java 21
     * Spring Boot
-    * Spring Data JPA
+    * Spring Data JPA / Hibernate
     * Spring Web
     * Maven
 * **Frontend:**
     * HTML5 & CSS3
     * JavaScript
 * **Database:**
-    * H2 and Postgres (Might add later with Docker 🐋)
+    * H2 (For development)
+    * Postgres (Running via Docker 🐋)
