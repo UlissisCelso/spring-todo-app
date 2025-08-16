@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Todo List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f1f3f4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2c3e50;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+            padding: 40px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        h1::before {
+            content: '✅';
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 2rem;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #495057;
+            box-shadow: 0 0 0 2px rgba(73, 80, 87, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: #495057;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-transform: none;
+            letter-spacing: normal;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn:hover {
+            background: #343a40;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-edit {
+            background: #28a745;
+            padding: 6px 12px;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+
+        .btn-edit:hover {
+            background: #218838;
+        }
+
+        .tasks-container {
+            margin-top: 40px;
+        }
+
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: #495057;
+            color: white;
+            border-color: #495057;
+        }
+
+        .task-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .task-item:hover {
+            border-color: #adb5bd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .task-item.completed {
+            background: #f8f9fa;
+            border-color: #28a745;
+        }
+
+        .task-item.completed::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 3px;
+            background: #28a745;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            flex-grow: 1;
+        }
+
+        .task-title.completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .task-description {
+            color: #718096;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state img {
+            width: 100px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 3px solid #dc3545;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 3px solid #28a745;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .task-header {
+                flex-direction: column;
+            }
+
+            .task-actions {
+                margin-top: 15px;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        
+        <!-- Messages -->
+        <div id="messages"></div>
+        
+        <!-- Form para criar/editar task -->
+        <div class="form-container">
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="title">Título:</label>
+                    <input type="text" id="title" name="title" maxlength="255" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Descrição:</label>
+                    <textarea id="description" name="description" maxlength="255"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">Adicionar Task</button>
+                <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">Cancelar</button>
+            </form>
+        </div>
+
+        <!-- Filtros e lista de tasks -->
+        <div class="tasks-container">
+            <div class="tasks-header">
+                <h2>Suas Tasks</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todas</button>
+                    <button class="filter-btn" data-filter="pending">Pendentes</button>
+                    <button class="filter-btn" data-filter="completed">Concluídas</button>
+                </div>
+            </div>
+            
+            <div id="tasksList">
+                <div class="loading">Carregando tasks...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TodoApp {
+            constructor() {
+                this.baseUrl = 'http://localhost:8080/task';
+                this.tasks = [];
+                this.currentFilter = 'all';
+                this.editingTaskId = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadTasks();
+            }
+
+            bindEvents() {
+                // Form submission
+                document.getElementById('taskForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleFormSubmit();
+                });
+
+                // Cancel edit
+                document.getElementById('cancelBtn').addEventListener('click', () => {
+                    this.cancelEdit();
+                });
+
+                // Filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setFilter(e.target.dataset.filter);
+                    });
+                });
+            }
+
+            async loadTasks() {
+                try {
+                    this.showLoading();
+                    const response = await fetch(`${this.baseUrl}/get`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Erro: ${response.status}`);
+                    }
+                    
+                    this.tasks = await response.json();
+                    this.renderTasks();
+                } catch (error) {
+                    this.showError('Erro ao carregar tasks: ' + error.message);
+                    console.error('Erro:', error);
+                }
+            }
+
+            async handleFormSubmit() {
+                const formData = new FormData(document.getElementById('taskForm'));
+                const taskData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    completed: false
+                };
+
+                try {
+                    if (this.editingTaskId) {
+                        await this.updateTask(this.editingTaskId, taskData);
+                    } else {
+                        await this.createTask(taskData);
+                    }
+                } catch (error) {
+                    this.showError('Erro ao salvar task: ' + error.message);
+                }
+            }
+
+            async createTask(taskData) {
+                const response = await fetch(`${this.baseUrl}/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro: ${response.status}`);
+                }
+
+                this.showSuccess('Task criada com sucesso!');
+                this.resetForm();
+                this.loadTasks();
+            }
+
+            async updateTask(id, taskData) {
+                // Manter o status completed atual
+                const currentTask = this.tasks.find(t => t.id === id);
+                taskData.completed = currentTask.completed;
+
+                const response = await fetch(`${this.baseUrl}/update/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro: ${response.status}`);
+                }
+
+                this.showSuccess('Task atualizada com sucesso!');
+                this.cancelEdit();
+                this.loadTasks();
+            }
+
+            async deleteTask(id) {
+                if (!confirm('Tem certeza que deseja deletar esta task?')) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${this.baseUrl}/delete/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erro: ${response.status}`);
+                    }
+
+                    this.showSuccess('Task deletada com sucesso!');
+                    this.loadTasks();
+                } catch (error) {
+                    this.showError('Erro ao deletar task: ' + error.message);
+                }
+            }
+
+            async toggleTaskComplete(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                const updatedTask = {
+                    ...task,
+                    completed: !task.completed
+                };
+
+                try {
+                    const response = await fetch(`${this.baseUrl}/update/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedTask)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erro: ${response.status}`);
+                    }
+
+                    this.loadTasks();
+                } catch (error) {
+                    this.showError('Erro ao atualizar task: ' + error.message);
+                }
+            }
+
+            editTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                document.getElementById('title').value = task.title;
+                document.getElementById('description').value = task.description || '';
+                document.getElementById('submitBtn').textContent = 'Atualizar Task';
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+                
+                this.editingTaskId = id;
+                document.getElementById('title').focus();
+            }
+
+            cancelEdit() {
+                this.resetForm();
+                this.editingTaskId = null;
+            }
+
+            resetForm() {
+                document.getElementById('taskForm').reset();
+                document.getElementById('submitBtn').textContent = 'Adicionar Task';
+                document.getElementById('cancelBtn').style.display = 'none';
+            }
+
+            setFilter(filter) {
+                this.currentFilter = filter;
+                
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+                
+                this.renderTasks();
+            }
+
+            renderTasks() {
+                const container = document.getElementById('tasksList');
+                const filteredTasks = this.getFilteredTasks();
+
+                if (filteredTasks.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;">📝</div>
+                            <h3>Nenhuma task encontrada</h3>
+                            <p>Comece adicionando uma nova task!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filteredTasks.map(task => `
+                    <div class="task-item ${task.completed ? 'completed' : ''}">
+                        <div class="task-header">
+                            <div style="display: flex; align-items: flex-start; flex-grow: 1;">
+                                <input type="checkbox" 
+                                       class="checkbox" 
+                                       ${task.completed ? 'checked' : ''} 
+                                       onchange="app.toggleTaskComplete(${task.id})">
+                                <div style="flex-grow: 1;">
+                                    <h3 class="task-title ${task.completed ? 'completed' : ''}">${this.escapeHtml(task.title)}</h3>
+                                    ${task.description ? `<p class="task-description">${this.escapeHtml(task.description)}</p>` : ''}
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn btn-edit" onclick="app.editTask(${task.id})">Editar</button>
+                                <button class="btn btn-danger" onclick="app.deleteTask(${task.id})">Deletar</button>
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            <span>Criada: ${this.formatDate(task.createdAt)}</span>
+                            ${task.updatedAt && task.updatedAt !== task.createdAt ? 
+                                `<span>Atualizada: ${this.formatDate(task.updatedAt)}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getFilteredTasks() {
+                switch (this.currentFilter) {
+                    case 'pending':
+                        return this.tasks.filter(task => !task.completed);
+                    case 'completed':
+                        return this.tasks.filter(task => task.completed);
+                    default:
+                        return this.tasks;
+                }
+            }
+
+            showLoading() {
+                document.getElementById('tasksList').innerHTML = '<div class="loading">Carregando tasks...</div>';
+            }
+
+            showError(message) {
+                this.showMessage(message, 'error');
+            }
+
+            showSuccess(message) {
+                this.showMessage(message, 'success');
+            }
+
+            showMessage(message, type) {
+                const container = document.getElementById('messages');
+                const messageEl = document.createElement('div');
+                messageEl.className = type;
+                messageEl.textContent = message;
+                
+                container.appendChild(messageEl);
+                
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 5000);
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // Initialize app
+        const app = new TodoApp();
+    </script>
+</body>
+</html>
