@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: spring-todo-container
+    environment:
+      POSTGRES_DB: spring-todo-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5431:5432"
+    restart: always
