@@ -1,5 +1,6 @@
 package dev.felix.spring_todo_backend.controller;
 
+import dev.felix.spring_todo_backend.dto.TaskDTO;
 import dev.felix.spring_todo_backend.entity.Task;
 import dev.felix.spring_todo_backend.service.TaskService;
 import org.springframework.http.HttpStatus;
@@ -33,15 +34,14 @@ public class TaskController {
     * */
 
     @GetMapping("/get")
-    public ResponseEntity<List<Task>> getAll() {
-        List<Task> allTasks = taskService.getAll();
+    public ResponseEntity<List<TaskDTO>> getAll() {
+        List<TaskDTO> allTasks = taskService.getAll();
         return ResponseEntity.ok(allTasks);
     }
 
-
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getByID(@PathVariable Long id) {
-        Task optTask = taskService.getByID(id);
+        TaskDTO optTask = taskService.getByID(id);
 
         if (optTask != null) {
             return  ResponseEntity.ok(optTask);
@@ -52,18 +52,18 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Task> create(@RequestBody Task task) {
-        Task createdTask = taskService.create(task);
+    public ResponseEntity<TaskDTO> create(@RequestBody TaskDTO taskDTO) {
+        TaskDTO createdTask = taskService.create(taskDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(task);
+                .body(createdTask);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Task task){
-        Task optTask = taskService.getByID(id);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskDTO taskDTO){
+        TaskDTO optTask = taskService.getByID(id);
 
         if (optTask != null) {
-            Task updatedTask = taskService.update(id, task);
+            TaskDTO updatedTask = taskService.update(id, taskDTO);
             return ResponseEntity.ok(updatedTask);
         }
 
@@ -73,7 +73,7 @@ public class TaskController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        Task optTask = taskService.getByID(id);
+        TaskDTO optTask = taskService.getByID(id);
 
         if (optTask != null) {
             taskService.delete(id);
