@@ -1,7 +1,6 @@
 package dev.felix.spring_todo_backend.controller;
 
 import dev.felix.spring_todo_backend.dto.TaskDTO;
-import dev.felix.spring_todo_backend.entity.Task;
 import dev.felix.spring_todo_backend.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +17,6 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-
-    @GetMapping("/greetings")
-    public String greetings() {
-        return "Hello, this is my springboot app!";
-    }
-
-    /*
-    * Implement CRUD functions
-    * -GET
-    * -GET BY ID
-    * -POST
-    * -PUT
-    * -DELETE
-    * */
 
     @GetMapping("/get")
     public ResponseEntity<List<TaskDTO>> getAll() {
